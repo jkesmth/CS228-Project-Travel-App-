@@ -96,34 +96,12 @@ class Traveler():
     
 
 
-# test case
 
-entertainment_names = ["Aurora Inn", "Fargo Bar and Grill", "The Well",
-               "The Village Market", "Dinning Hall", "Dorie's",
-                       "The Grind", "Koko's"]
-
-# make the nodes
-
-nodes = []
-
-for place in entertainment_names:
-    nodes.append(Node(place))
-
-# network them
-
-for a in nodes:
-    for b in reversed(nodes):
-        if a!=b: a.add_edge_to(b)
-
-
-# print out our network
-
-print_formatB(nodes)
         
     
 
 
-#def find_new_route(node_list, prev_routes = []):
+
     
     
 
@@ -131,30 +109,111 @@ print_formatB(nodes)
 
 # main loop v1
 
-p = Traveler(nodes[0], None)
-print type(p)
-print 
-print "type u to update"
-
-print
-print "started at: ",
-
-print p.current.name
-
-while True:
-    
-    user_input = raw_input('?:')
-    if user_input == "u":
-        next_visited = p.update()
-        if next_visited == None:
-            print "no more places to go, we ",
-            print_format_route(p.route)
-            break
-        else:
-            print_format_route(next_visited)
+##p = Traveler(nodes[0], None)
+##print type(p)
+##print 
+##print "type u to update"
+##
+##print
+##print "started at: ",
+##
+##print p.current.name
+##
+##while True:
+##    
+##    user_input = raw_input('?:')
+##    if user_input == "u":
+##        next_visited = p.update()
+##        if next_visited == None:
+##            print "no more places to go, we ",
+##            print_format_route(p.route)
+##            break
+##        else:
+##            print_format_route(next_visited)
 
   
+
+# main loop v2
+
+class Main():
+    def __init__(self):
+        self.running = False
+        self.prompts = ["new = Create a new traveler",
+                        "dn = Display the network",
+                        "dt = Display the traveler's current route",
+                        "u = Update the traveler"
+                        "promt = Display prompts"]
+        self.inputs = ["new", "dn", "dt", "u", "prompt"]
+
     
+        
+    
+    def run():
+        
+        # test case
+
+        entertainment_names = ["Aurora Inn",
+                               "Fargo Bar and Grill",
+                               "The Well",
+                               "The Village Market",
+                               "Dinning Hall",
+                               "Dorie's",
+                               "The Grind",
+                               "Koko's"]
+
+        # make the nodes
+
+        nodes = []
+
+        for place in entertainment_names:
+            nodes.append(Node(place))
+
+        # network them
+
+        for a in nodes:
+            for b in reversed(nodes):
+                if a!=b: a.add_edge_to(b)
+
+        # make our starting traveler
+
+        bob = Traveler(nodes[0])
+
+        # start our mainloop
+        
+        
+        self.running = True
+        
+        for prompt in self.prompts:
+            print prompt
+        
+        while self.running:
+            user_input = raw_input("Waiting for input:")
+            if user_input not in self.inputs:
+                print "Not a valid input"
+            else if user_input == self.inputs[0]:
+                bob = Traveler(nodes[0])
+            else if user_input == self.inputs[1]:
+                print_formatB(nodes)
+            else if user_input == self.inputs[2]:
+                print_format_route(bob.route)
+            else if user_input == self.inputs[3]:
+                r = bob.update()
+                if r != None: print_format_route(r)
+                else: print "reached the end"
+            else if user_input == self.inputs[4]:
+                for prompt in self.prompts:
+                    print prompt
+                
+            
+            
+            
+            
+            
+            
+
+            
+        
+        
         
 
 
