@@ -76,7 +76,7 @@ class Node():
         return l
 
 
-class Path():
+class Traveler():
 
     def __init__(self, start, end):
         self.route = [start]
@@ -131,7 +131,7 @@ print_formatB(nodes)
 
 # main loop v1
 
-p = Path(nodes[0], None)
+p = Traveler(nodes[0], None)
 print type(p)
 print 
 print "type u to update"
