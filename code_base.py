@@ -1,13 +1,16 @@
+import sqlite3 as lite
+
+
+
 
 ### Utility Functions
 
 def print_formatA(node_list):
     for n in node_list:
-        print n.name,
-        print ",",
+        print n.name
 
 def print_formatB(node_list):
-    for n in nodes:
+    for n in node_list:
         print n.name,
         print "edges:"
         print "-------------------------"*2
@@ -78,7 +81,7 @@ class Node():
 
 class Traveler():
 
-    def __init__(self, start, end):
+    def __init__(self, start, end = None):
         self.route = [start]
         self.dest = end
         self.current = start
@@ -94,81 +97,32 @@ class Traveler():
     
 
     
-
-
-
-        
-    
-
-
-
-    
-    
-
-
-
-# main loop v1
-
-##p = Traveler(nodes[0], None)
-##print type(p)
-##print 
-##print "type u to update"
-##
-##print
-##print "started at: ",
-##
-##print p.current.name
-##
-##while True:
-##    
-##    user_input = raw_input('?:')
-##    if user_input == "u":
-##        next_visited = p.update()
-##        if next_visited == None:
-##            print "no more places to go, we ",
-##            print_format_route(p.route)
-##            break
-##        else:
-##            print_format_route(next_visited)
-
   
 
 # main loop v2
 
 class Main():
-    def __init__(self):
-        self.running = False
+    def __init__(self, nodes):
+
+        self.nodes = nodes
+        
+        # User interface strings
         self.prompts = ["new = Create a new traveler",
                         "dn = Display the network",
                         "dt = Display the traveler's current route",
-                        "u = Update the traveler"
-                        "promt = Display prompts"]
-        self.inputs = ["new", "dn", "dt", "u", "prompt"]
+                        "u = Update the traveler",
+                        "x = quit"]
+        self.inputs = ["new", "dn", "dt", "u", "x"]
 
+        
     
         
     
-    def run():
+    def run(self):
+
+        nodes = self.nodes
         
-        # test case
-
-        entertainment_names = ["Aurora Inn",
-                               "Fargo Bar and Grill",
-                               "The Well",
-                               "The Village Market",
-                               "Dinning Hall",
-                               "Dorie's",
-                               "The Grind",
-                               "Koko's"]
-
-        # make the nodes
-
-        nodes = []
-
-        for place in entertainment_names:
-            nodes.append(Node(place))
-
-        # network them
+        # network our nodes (quick and dirty)
 
         for a in nodes:
             for b in reversed(nodes):
@@ -181,35 +135,58 @@ class Main():
         # start our mainloop
         
         
-        self.running = True
+        running = True
         
-        for prompt in self.prompts:
-            print prompt
-        
-        while self.running:
+        while running:
+            for prompt in self.prompts:
+                print prompt
             user_input = raw_input("Waiting for input:")
             if user_input not in self.inputs:
                 print "Not a valid input"
-            if: user_input == self.inputs[0]:
+            if user_input == self.inputs[0]:
                 bob = Traveler(nodes[0])
-            if: user_input == self.inputs[1]:
+            if user_input == self.inputs[1]:
                 print_formatB(nodes)
-            if: user_input == self.inputs[2]:
+            if user_input == self.inputs[2]:
                 print_format_route(bob.route)
-            if: user_input == self.inputs[3]:
+            if user_input == self.inputs[3]:
                 r = bob.update()
                 if r != None: print_format_route(r)
                 else: print "reached the end"
-            if: user_input == self.inputs[4]:
-                for prompt in self.prompts:
-                    print prompt
+            if user_input == self.inputs[4]:
+                running = False
+           
+           
                 
             
-            
-            
-            
-            
-            
+
+# Remake our test database        
+
+execfile('construct_database.py')
+
+# Grab the data we want from the database
+
+con = lite.connect('test_database.db')
+
+node_list = []
+
+with con:
+
+    con.row_factory = lite.Row
+    
+    cur = con.cursor()
+    cur.execute("SELECT * FROM venues")
+    
+    rows = cur.fetchall()
+    
+    for row in rows:
+        node_list.append(Node(row["name"]))
+
+print_formatA(node_list)
+
+m = Main(node_list)
+
+m.run()        
 
             
         
